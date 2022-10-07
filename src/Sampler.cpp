@@ -64,6 +64,9 @@ int Sampler::InitParams() {
   env = getenv("YAMP_CPU");
   cpu_ = env ? atoi(env) : YAMP_DEFAULT_CPU;
 
+  env = getenv("YAMP_LOG");
+  log_ = (env != NULL);
+
   env = getenv("YAMP_EVENTS");
   char str[256];
   if (env) strncpy(str, env, strlen(env) + 1);
@@ -77,7 +80,7 @@ int Sampler::InitParams() {
     if (nevents_ >= YAMP_MAX_EVENTS) break;
   }
 
-  _info("cpu[%d] freq[%d] nevents[%d]", cpu_, freq_, nevents_);
+  _info("cpu[%d] freq[%d] log[%d] nevents[%d]", cpu_, freq_, log_, nevents_);
   return YAMP_OK;
 }
 

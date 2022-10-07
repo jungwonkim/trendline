@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "Data.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 namespace yamp {
@@ -17,12 +18,15 @@ Printer::~Printer() {
 }
 
 int Printer::Print(Data* data) {
-  char filename[256];
-  for (int i = 0; i < 9999; i++) {
-    sprintf(filename, "yamp-%04d.log", i);
-    if (access(filename, F_OK) != 0) break;
+  FILE* fp = stdout;
+  if (sampler_->log()) {
+    char filename[256];
+    for (int i = 0; i < 9999; i++) {
+      sprintf(filename, "yamp-%04d.log", i);
+      if (access(filename, F_OK) != 0) break;
+    }
+    fp = fopen(filename, "w");
   }
-  FILE* fp = fopen(filename, "w");
 
   nevents_ = sampler_->nevents();
   fprintf(fp, "%6s", "Time");
