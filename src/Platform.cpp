@@ -13,12 +13,12 @@ Platform::Platform() {
   init_ = false;
   finalize_ = false;
 
-  freq_ = 1;
+  freq_ = 10;
   csv_ = false;
 
   cmd_ = 1;
 
-  ncpus_ = 2;
+  ncpus_ = 5;
 
   nsamplers_ = 0;
   for (int i = 0; i < YAMP_MAX_EVENTS_SET; i++) samplers_[i] = NULL;
