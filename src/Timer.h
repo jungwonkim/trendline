@@ -1,8 +1,6 @@
 #ifndef YAMP_SRC_TIMER_H
 #define YAMP_SRC_TIMER_H
 
-#include <stddef.h>
-
 namespace yamp {
 
 class Timer {

@@ -21,7 +21,7 @@ class Timer;
 
 class Sampler : public Thread {
 public:
-  Sampler(int cpu, int* events, int nevents, int freq);
+  Sampler(int cpu, int* events, int freq);
   virtual ~Sampler();
 
   virtual void Run();

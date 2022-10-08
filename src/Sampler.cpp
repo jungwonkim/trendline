@@ -17,10 +17,14 @@
 
 namespace yamp {
 
-Sampler::Sampler(int cpu, int* events, int nevents, int freq) {
+Sampler::Sampler(int cpu, int* events, int freq) {
   cpu_ = cpu;
-  for (int i = 0; i < nevents; i++) events_[i] = events[i];
-  nevents_ = nevents;
+  nevents_ = 0;
+  for (int i = 0; i < YAMP_MAX_EVENTS; i++) {
+    if (events[i] < 0) break;
+    events_[i] = events[i];
+    nevents_++;
+  }
   freq_ = freq;
   pid_ = -1;
 
@@ -104,11 +108,18 @@ void Sampler::Run() {
   }
   */
 
-  while (true) {
-    usleep(1000 * 1000 / freq_);
+  if (freq_ == 0) {
+    int status;
+    waitpid(pid_, &status, 0);
     Sample();
-    if (!running_) break;
+  } else {
+    while (true) {
+      usleep(1000 * 1000 / freq_);
+      Sample();
+      if (!running_) break;
+    }
   }
+
 }
 
 int Sampler::Sample() {

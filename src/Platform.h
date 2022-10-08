@@ -1,8 +1,11 @@
 #ifndef YAMP_SRC_PLATFORM_H
 #define YAMP_SRC_PLATFORM_H
 
+#include "Type.h"
+
 namespace yamp {
 
+class Sampler;
 class Timer;
 class PMU;
 
@@ -18,16 +21,29 @@ public:
 
   PMU* pmu() { return pmu_; }
   Timer* timer() { return timer_; }
+
+  bool csv() { return csv_; }
   double Now();
 
 public:
   static Platform* GetPlatform();
 
 private:
+  int InitEventsSet();
+  int GetOptions();
+
+private:
   int* argc_;
+  int cmd_;
   char*** argv_;
   bool init_;
   bool finalize_;
+  bool csv_;
+  int freq_;
+  int ncpus_;
+  int nsamplers_;
+
+  Sampler* samplers_[YAMP_MAX_EVENTS_SET];
 
   PMU* pmu_;
   Timer* timer_;
