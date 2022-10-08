@@ -2,6 +2,7 @@
 #define YAMP_SRC_SAMPLER_H
 
 #include "Type.h"
+#include "Thread.h"
 #include <linux/perf_event.h>
 
 struct read_format {
@@ -18,34 +19,37 @@ class Data;
 class Printer;
 class Timer;
 
-class Sampler {
+class Sampler : public Thread {
 public:
-  Sampler();
-  ~Sampler();
+  Sampler(int cpu, int* events, int nevents, int freq);
+  virtual ~Sampler();
 
-  int Run(char** argv);
+  virtual void Run();
   int Init();
   int Sample();
   int Print();
 
-  int freq() { return freq_; }
   int cpu() { return cpu_; }
   int nevents() { return nevents_; }
-  int event(int i) { return event_[i].config; }
-  bool log() { return log_; }
+  int event(int i) { return events_[i]; }
+  int freq() { return freq_; }
+
+  void set_pid(pid_t pid) { pid_ = pid; }
 
 private:
   int InitParams();
 
 private:
-  int freq_;
   int cpu_;
+  int events_[YAMP_MAX_EVENTS];
   int nevents_;
-  bool log_;
-  struct perf_event_attr event_[YAMP_MAX_EVENTS];
+  int freq_;
+  struct perf_event_attr attr_[YAMP_MAX_EVENTS];
   int fd_[YAMP_MAX_EVENTS];
   u_int64_t id_[YAMP_MAX_EVENTS];
   struct read_format cnt_;
+
+  pid_t pid_;
 
   Data* data_;
   Printer* printer_;

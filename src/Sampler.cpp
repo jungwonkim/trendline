@@ -1,6 +1,7 @@
 #include "Sampler.h"
 #include "Debug.h"
 #include "Data.h"
+#include "Platform.h"
 #include "Printer.h"
 #include "Timer.h"
 #include <stdlib.h>
@@ -16,11 +17,16 @@
 
 namespace yamp {
 
-Sampler::Sampler() {
-  nevents_ = 0;
+Sampler::Sampler(int cpu, int* events, int nevents, int freq) {
+  cpu_ = cpu;
+  for (int i = 0; i < nevents; i++) events_[i] = events[i];
+  nevents_ = nevents;
+  freq_ = freq;
+  pid_ = -1;
+
   data_ = new Data();
   printer_ = new Printer(this);
-  timer_ = new Timer();
+  timer_ = Platform::GetPlatform()->timer();
   Init();
 }
 
@@ -30,27 +36,25 @@ Sampler::~Sampler() {
   }
   delete printer_;
   delete data_;
-  delete timer_;
 }
 
 int Sampler::Init() {
-  memset(event_, 0, sizeof(event_));
-  for (int i = 0; i < YAMP_MAX_EVENTS; i++) {
-    event_[i].inherit = 1;
-    event_[i].disabled = 0;
-    event_[i].exclude_kernel = 1;
-    event_[i].exclude_hv = 1;
-    event_[i].read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
-    event_[i].type = PERF_TYPE_RAW;
+  for (int i = 0; i < nevents_; i++) {
+    attr_[i].inherit = 1;
+    attr_[i].disabled = 0;
+    attr_[i].exclude_kernel = 1;
+    attr_[i].exclude_hv = 1;
+    attr_[i].read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
+    attr_[i].type = PERF_TYPE_RAW;
+    attr_[i].config = events_[i];
   }
-  InitParams();
 
   for (int i = 0; i < nevents_; i++) {
     int parent = i == 0 ? -1 : fd_[0];
-    fd_[i] = syscall(__NR_perf_event_open, event_ + i, 0, cpu_, parent, 0); 
+    fd_[i] = syscall(__NR_perf_event_open, attr_ + i, 0, cpu_, parent, 0); 
     if (fd_[i] == -1) {
       perror("syscall");
-      _error("event[%d] config[0x%x]", i, event_[i].config);
+      _error("event[%d] config[0x%x]", i, attr_[i].config);
     }
     ioctl(fd_[i], PERF_EVENT_IOC_ID, id_ + i);
   }
@@ -64,9 +68,6 @@ int Sampler::InitParams() {
   env = getenv("YAMP_CPU");
   cpu_ = env ? atoi(env) : YAMP_DEFAULT_CPU;
 
-  env = getenv("YAMP_LOG");
-  log_ = (env != NULL);
-
   env = getenv("YAMP_EVENTS");
   char str[256];
   if (env) strncpy(str, env, strlen(env) + 1);
@@ -75,32 +76,39 @@ int Sampler::InitParams() {
   char* rest = str;
   char* a = NULL;
   while ((a = strtok_r(rest, ",", &rest))) {
-    event_[nevents_].config = (int) strtol(a, NULL, 16);
+    attr_[nevents_].config = (int) strtol(a, NULL, 16);
     nevents_++;
     if (nevents_ >= YAMP_MAX_EVENTS) break;
   }
 
-  _info("cpu[%d] freq[%d] log[%d] nevents[%d]", cpu_, freq_, log_, nevents_);
+  _info("cpu[%d] freq[%d] nevents[%d]", cpu_, freq_, nevents_);
   return YAMP_OK;
 }
 
-int Sampler::Run(char** argv) {
+void Sampler::Run() {
   if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
   if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
 
-  pid_t p = fork();
-  if (p == 0)
-    if (execvp(argv[1], argv + 1) == -1) _error("%s", argv[1]);
-
+  /*
   int status;
-  do {
+  if (freq_ == 0) {
+    waitpid(pid_, &status, 0);
+    Sample();
+  } else {
+    do {
+      usleep(1000 * 1000 / freq_);
+      Sample();
+      int child = waitpid(pid_, &status, WNOHANG);
+      if (WIFEXITED(status) && child > 0) break;
+    } while (true);
+  }
+  */
+
+  while (true) {
     usleep(1000 * 1000 / freq_);
     Sample();
-    int child = waitpid(p, &status, WNOHANG);
-    if (WIFEXITED(status) && child > 0) break;
-  } while (true);
-
-  return YAMP_OK;
+    if (!running_) break;
+  }
 }
 
 int Sampler::Sample() {

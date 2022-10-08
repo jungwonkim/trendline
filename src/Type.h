@@ -1,6 +1,7 @@
 #ifndef YAMP_SRC_TYPE_H
 #define YAMP_SRC_TYPE_H
 
+#include <stddef.h>
 #include <sys/types.h>
 
 #define YAMP_OK             1

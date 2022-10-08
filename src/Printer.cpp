@@ -19,7 +19,7 @@ Printer::~Printer() {
 
 int Printer::Print(Data* data) {
   FILE* fp = stdout;
-  if (sampler_->log()) {
+  if (false) {
     char filename[256];
     for (int i = 0; i < 9999; i++) {
       sprintf(filename, "yamp-%04d.log", i);
@@ -29,7 +29,7 @@ int Printer::Print(Data* data) {
   }
 
   nevents_ = sampler_->nevents();
-  fprintf(fp, "%6s", "Time");
+  fprintf(fp, "%-7s", "Time");
   for(int i = 0; i < nevents_; i++) {
     fprintf(fp, "%12p", sampler_->event(i));
   }
@@ -38,7 +38,7 @@ int Printer::Print(Data* data) {
   int nrows = data->nrows();
   yamp_row* chunk = data->current();
   for (int j = 0; j < nrows; j++) {
-    fprintf(fp, "%6.2f", chunk[j].time);
+    fprintf(fp, "%-7.2f", chunk[j].time);
     for (int k = 0; k < nevents_; k++) {
       fprintf(fp, "%12lld", chunk[j].data[k]);
     }

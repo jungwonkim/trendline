@@ -12,7 +12,7 @@ Data::Data() {
 
 Data::~Data() {
   delete[] chunk0_;
-  delete[]  chunk1_;
+  delete[] chunk1_;
 }
 
 int Data::NewEpoch(double time) {

@@ -1,11 +1,17 @@
+set(APP yamp)
+
 set(YAMP_SOURCES
   Data.cpp
   Main.cpp
+  Platform.cpp
   Printer.cpp
   Sampler.cpp
+  Thread.cpp
   Timer.cpp
 )
 
-add_executable(yamp ${YAMP_SOURCES})
+add_executable(${APP} ${YAMP_SOURCES})
+
+target_link_libraries(${APP} "-pthread")
 
 install(TARGETS yamp DESTINATION bin)
