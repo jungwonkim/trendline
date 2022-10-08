@@ -4,6 +4,7 @@
 namespace yamp {
 
 class Timer;
+class PMU;
 
 class Platform {
 private:
@@ -15,6 +16,7 @@ public:
   int Finalize();
   int Run();
 
+  PMU* pmu() { return pmu_; }
   Timer* timer() { return timer_; }
   double Now();
 
@@ -27,6 +29,7 @@ private:
   bool init_;
   bool finalize_;
 
+  PMU* pmu_;
   Timer* timer_;
 
 private:

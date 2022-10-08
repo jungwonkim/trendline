@@ -1,5 +1,6 @@
 #include "Platform.h"
 #include "Debug.h"
+#include "PMU.h"
 #include "Sampler.h"
 #include "Type.h"
 #include "Timer.h"
@@ -12,11 +13,13 @@ Platform::Platform() {
   init_ = false;
   finalize_ = false;
 
+  pmu_ = new PMU();
   timer_ = new Timer();
 }
 
 Platform::~Platform() {
   if (!init_) return;
+  delete pmu_;
   delete timer_;
 }
 

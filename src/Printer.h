@@ -4,6 +4,7 @@
 namespace yamp {
 
 class Data;
+class PMU;
 class Sampler;
 
 class Printer {
@@ -15,6 +16,7 @@ public:
 
 private:
   Sampler* sampler_;
+  PMU* pmu_;
   int nevents_;
 
 };

@@ -4,6 +4,7 @@ set(YAMP_SOURCES
   Data.cpp
   Main.cpp
   Platform.cpp
+  PMU.cpp
   Printer.cpp
   Sampler.cpp
   Thread.cpp
