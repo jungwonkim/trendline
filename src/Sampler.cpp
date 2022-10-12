@@ -8,16 +8,12 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <sys/syscall.h>
-#include <sys/wait.h>
-
-#define YAMP_DEFAULT_CPU    -1
-#define YAMP_DEFAULT_FREQ   10
-#define YAMP_DEFAULT_EVENTS "11,1b,3e,3d,3b,3a"
 
 namespace yamp {
 
-Sampler::Sampler(int cpu, int* events, int freq) {
+Sampler::Sampler(int cpu, int* events, int freq, int start) {
   cpu_ = cpu;
   nevents_ = 0;
   for (int i = 0; i < YAMP_MAX_EVENTS; i++) {
@@ -26,6 +22,7 @@ Sampler::Sampler(int cpu, int* events, int freq) {
     nevents_++;
   }
   freq_ = freq;
+  start_ = start;
   pid_ = -1;
 
   data_ = new Data();
@@ -43,7 +40,9 @@ Sampler::~Sampler() {
 }
 
 int Sampler::Init() {
+  memset(attr_, 0, nevents_ * sizeof(attr_[0]));
   for (int i = 0; i < nevents_; i++) {
+    attr_[i].size = sizeof(struct perf_event_attr);
     attr_[i].inherit = 1;
     attr_[i].disabled = 0;
     attr_[i].exclude_kernel = 1;
@@ -51,11 +50,9 @@ int Sampler::Init() {
     attr_[i].read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     attr_[i].type = PERF_TYPE_RAW;
     attr_[i].config = events_[i];
-  }
 
-  for (int i = 0; i < nevents_; i++) {
-    int parent = i == 0 ? -1 : fd_[0];
-    fd_[i] = syscall(__NR_perf_event_open, attr_ + i, 0, cpu_, parent, 0); 
+    int lead = i == 0 ? -1 : fd_[0];
+    fd_[i] = syscall(__NR_perf_event_open, attr_ + i, 0, cpu_, lead, 0); 
     if (fd_[i] == -1) {
       perror("syscall");
       _error("event[%d] config[0x%x]", i, attr_[i].config);
@@ -66,13 +63,8 @@ int Sampler::Init() {
 }
 
 int Sampler::InitParams() {
-  const char* env = getenv("YAMP_FREQ");
-  freq_ = env ? atoi(env) : YAMP_DEFAULT_FREQ;
-
-  env = getenv("YAMP_CPU");
-  cpu_ = env ? atoi(env) : YAMP_DEFAULT_CPU;
-
-  env = getenv("YAMP_EVENTS");
+#if 0
+  const char* env = getenv("YAMP_EVENTS");
   char str[256];
   if (env) strncpy(str, env, strlen(env) + 1);
   else strncpy(str, YAMP_DEFAULT_EVENTS, strlen(YAMP_DEFAULT_EVENTS) + 1);
@@ -86,51 +78,36 @@ int Sampler::InitParams() {
   }
 
   _info("cpu[%d] freq[%d] nevents[%d]", cpu_, freq_, nevents_);
+#endif
   return YAMP_OK;
 }
 
 void Sampler::Run() {
+  cpu_set_t cpuset;
+  CPU_ZERO(&cpuset);
+  CPU_SET(cpu_, &cpuset);
+  if (pthread_setaffinity_np(thread_, sizeof(cpuset), &cpuset) != 0)
+    _error("cpu[%d]", cpu_);
+
+  if (start_ > 0) sleep(start_);
   if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
   if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
-
-  /*
-  int status;
-  if (freq_ == 0) {
-    waitpid(pid_, &status, 0);
+  do {
+    usleep(1000 * 1000 / freq_);
     Sample();
-  } else {
-    do {
-      usleep(1000 * 1000 / freq_);
-      Sample();
-      int child = waitpid(pid_, &status, WNOHANG);
-      if (WIFEXITED(status) && child > 0) break;
-    } while (true);
-  }
-  */
-
-  if (freq_ == 0) {
-    int status;
-    waitpid(pid_, &status, 0);
-    Sample();
-  } else {
-    while (true) {
-      usleep(1000 * 1000 / freq_);
-      Sample();
-      if (!running_) break;
-    }
-  }
-
+  } while (running_);
 }
 
 int Sampler::Sample() {
   if (ioctl(fd_[0], PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
 
-  struct read_format cnt_;
-  read(fd_[0], &cnt_, sizeof(cnt_));
+  struct read_format cnt;
+  ssize_t s = read(fd_[0], &cnt, sizeof(cnt));
 
-  data_->NewEpoch(timer_->Now());
-  for (int i = 0; i < cnt_.nr; i++) {
-    data_->AddCount(i, cnt_.values[i].value);
+  data_->AddTime(timer_->Now());
+  for (int i = 0; i < cnt.nr; i++) {
+    if (id_[i] != cnt.values[i].id) _error("id[%llu] vs read_id[%llu]", id_[i], cnt.values[i].id);
+    data_->AddCount(i, cnt.values[i].value);
   }
   data_->Commit();
 

@@ -21,7 +21,7 @@ class Timer;
 
 class Sampler : public Thread {
 public:
-  Sampler(int cpu, int* events, int freq);
+  Sampler(int cpu, int* events, int freq, int start);
   virtual ~Sampler();
 
   virtual void Run();
@@ -44,10 +44,10 @@ private:
   int events_[YAMP_MAX_EVENTS];
   int nevents_;
   int freq_;
+  int start_;
   struct perf_event_attr attr_[YAMP_MAX_EVENTS];
   int fd_[YAMP_MAX_EVENTS];
   u_int64_t id_[YAMP_MAX_EVENTS];
-  struct read_format cnt_;
 
   pid_t pid_;
 

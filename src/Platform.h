@@ -19,6 +19,7 @@ public:
   int Finalize();
   int Run();
 
+  int sid() { return sid_; }
   PMU* pmu() { return pmu_; }
   Timer* timer() { return timer_; }
 
@@ -29,6 +30,7 @@ public:
   static Platform* GetPlatform();
 
 private:
+  int SetSID();
   int InitEventsSet();
   int GetOptions();
 
@@ -40,8 +42,10 @@ private:
   bool finalize_;
   bool csv_;
   int freq_;
+  int start_;
   int ncpus_;
   int nsamplers_;
+  int sid_;
 
   Sampler* samplers_[YAMP_MAX_EVENTS_SET];
 

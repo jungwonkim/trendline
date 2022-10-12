@@ -3,7 +3,7 @@
 
 #include "Type.h"
 
-#define YAMP_DATA_NCHUNKS     1024
+#define YAMP_MAX_ROWS 1024 * 1024
 
 typedef struct _yamp_row {
   double time;
@@ -17,18 +17,16 @@ public:
   Data();
   ~Data();
 
-  int NewEpoch(double time);
+  int AddTime(double time);
   int AddCount(int idx, u_int64_t data);
   int Commit();
 
-  int nrows() { return row_; }
-  yamp_row* current() { return current_; }
+  int nrows() { return rid_; }
+  yamp_row* rows() { return rows_; }
 
 private:
-  int row_;
-  yamp_row* chunk0_;
-  yamp_row* chunk1_;
-  yamp_row* current_;
+  int rid_;
+  yamp_row* rows_;
 };
 
 } /* namespace yamp */
