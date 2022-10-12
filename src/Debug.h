@@ -1,5 +1,5 @@
-#ifndef YAMP_SRC_DEBUG_H
-#define YAMP_SRC_DEBUG_H
+#ifndef TRENDLINE_SRC_DEBUG_H
+#define TRENDLINE_SRC_DEBUG_H
 
 #include <stdio.h>
 #include <string.h>
@@ -67,7 +67,7 @@
 #define CHECK_O   "\u2714 "
 #define CHECK_X   "\u2716 "
 
-namespace yamp {
+namespace trendline {
 
 #define __SHORT_FILE__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
@@ -119,6 +119,6 @@ namespace yamp {
 #define __todo(fmt, ...) do { } while (0)
 #endif
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_DEBUG_H */
+#endif /* TRENDLINE_SRC_DEBUG_H */

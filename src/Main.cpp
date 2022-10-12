@@ -7,8 +7,8 @@ int usage(char* cmd) {
 }
 
 int main(int argc, char** argv) {
-  yamp::Platform* platform = yamp::Platform::GetPlatform();
-  if (platform->Init(&argc, &argv) == YAMP_ERR) return usage(argv[0]);
+  trendline::Platform* platform = trendline::Platform::GetPlatform();
+  if (platform->Init(&argc, &argv) == TRENDLINE_ERR) return usage(argv[0]);
   platform->Run();
   platform->Finalize();
   return 0;

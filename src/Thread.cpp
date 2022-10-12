@@ -1,7 +1,7 @@
 #include "Thread.h"
 #include "Debug.h"
 
-namespace yamp {
+namespace trendline {
 
 Thread::Thread() {
   thread_ = (pthread_t) NULL;
@@ -41,5 +41,5 @@ void* Thread::ThreadFunc(void* argp) {
   return NULL;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */
 

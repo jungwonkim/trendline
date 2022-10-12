@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include <time.h>
 
-namespace yamp {
+namespace trendline {
 
 Timer::Timer() {
   boot_ = 0.0;
@@ -18,4 +18,4 @@ double Timer::Now() {
   return t.tv_sec + 1.e-9 * t.tv_nsec - boot_;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */

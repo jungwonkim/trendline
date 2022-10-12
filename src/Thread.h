@@ -1,10 +1,10 @@
-#ifndef YAMP_SRC_THREAD_H
-#define YAMP_SRC_THREAD_H
+#ifndef TRENDLINE_SRC_THREAD_H
+#define TRENDLINE_SRC_THREAD_H
 
 #include <semaphore.h>
 #include <pthread.h>
 
-namespace yamp {
+namespace trendline {
 
 class Thread {
 public:
@@ -28,6 +28,6 @@ protected:
   sem_t sem_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_THREAD_H */
+#endif /* TRENDLINE_SRC_THREAD_H */

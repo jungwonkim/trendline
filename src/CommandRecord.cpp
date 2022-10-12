@@ -10,16 +10,16 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-namespace yamp {
+namespace trendline {
 
-CommandRecord::CommandRecord() {
-  ncpus_ = YAMP_MAX_EVENTS_SET;
+CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
+  ncpus_ = TRENDLINE_MAX_EVENTS_SET;
   freq_ = 10;
   start_ = 0;
   csv_ = false;
 
   nsamplers_ = 0;
-  for (int i = 0; i < YAMP_MAX_EVENTS_SET; i++) samplers_[i] = NULL;
+  for (int i = 0; i < TRENDLINE_MAX_EVENTS_SET; i++) samplers_[i] = NULL;
   printer_ = NULL;
   fp_ = stderr;
 
@@ -31,27 +31,24 @@ CommandRecord::~CommandRecord() {
   if (fp_ != stderr) fclose(fp_);
 }
 
-int CommandRecord::Init(int* argc, char*** argv) {
-  argc_ = *argc;
-  argv_ = *argv;
-
-  GetOptions();
+int CommandRecord::Init() {
+  InitOptions();
   InitPrinterOutput();
   printer_ = new Printer(fp_);
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
 int CommandRecord::InitPrinterOutput() {
-  if (!csv_) return YAMP_OK;
+  if (!csv_) return TRENDLINE_OK;
   char filename[256];
   for (int i = 0; i < 9999; i++) {
-    sprintf(filename, YAMP_LOG_FILENAME, i);
+    sprintf(filename, TRENDLINE_LOG_FILENAME, i);
     if (access(filename, F_OK) != 0) {
       fp_ = fopen(filename, "a");
-      return fp_ ? YAMP_OK : YAMP_ERR;
+      return fp_ ? TRENDLINE_OK : TRENDLINE_ERR;
     }
   }
-  return YAMP_ERR;
+  return TRENDLINE_ERR;
 }
 
 int CommandRecord::Run() {
@@ -82,10 +79,10 @@ int CommandRecord::Run() {
   }
   for (int i = 0; i < nsamplers_; i++)
     if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(samplers_[i]);
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
-int CommandRecord::GetOptions() {
+int CommandRecord::InitOptions() {
   int opt;
   while ((opt = getopt(argc_, argv_, "C:e:F:s:o")) != -1) {
     switch (opt) {
@@ -120,11 +117,11 @@ int CommandRecord::GetOptions() {
         csv_ = true;
         break;
       default:
-        return YAMP_ERR;
+        return TRENDLINE_ERR;
     }
   }
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
 
-} /* namespace yamp */
+} /* namespace trendline */

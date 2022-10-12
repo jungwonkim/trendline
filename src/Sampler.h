@@ -1,5 +1,5 @@
-#ifndef YAMP_SRC_SAMPLER_H
-#define YAMP_SRC_SAMPLER_H
+#ifndef TRENDLINE_SRC_SAMPLER_H
+#define TRENDLINE_SRC_SAMPLER_H
 
 #include "Type.h"
 #include "Thread.h"
@@ -10,10 +10,10 @@ struct read_format {
   struct {
     u_int64_t value;
     u_int64_t id;
-  } values[YAMP_MAX_EVENTS];
+  } values[TRENDLINE_MAX_EVENTS];
 };
 
-namespace yamp {
+namespace trendline {
 
 class Data;
 class Timer;
@@ -41,13 +41,13 @@ private:
 
 private:
   int cpu_;
-  int events_[YAMP_MAX_EVENTS];
+  int events_[TRENDLINE_MAX_EVENTS];
   int nevents_;
   int freq_;
   int start_;
-  struct perf_event_attr attr_[YAMP_MAX_EVENTS];
-  int fd_[YAMP_MAX_EVENTS];
-  u_int64_t id_[YAMP_MAX_EVENTS];
+  struct perf_event_attr attr_[TRENDLINE_MAX_EVENTS];
+  int fd_[TRENDLINE_MAX_EVENTS];
+  u_int64_t id_[TRENDLINE_MAX_EVENTS];
 
   pid_t pid_;
 
@@ -55,6 +55,6 @@ private:
   Timer* timer_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_SAMPLER_H */
+#endif /* TRENDLINE_SRC_SAMPLER_H */

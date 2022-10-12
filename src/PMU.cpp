@@ -1,9 +1,9 @@
 #include "PMU.h"
 
-namespace yamp {
+namespace trendline {
 
 PMU::PMU() {
-  events_ = (int(*)[YAMP_MAX_EVENTS]) new int[YAMP_MAX_EVENTS_SET * YAMP_MAX_EVENTS] {
+  events_ = (int(*)[TRENDLINE_MAX_EVENTS]) new int[TRENDLINE_MAX_EVENTS_SET * TRENDLINE_MAX_EVENTS] {
     0x11, 0x3b, 0x3a, 0x3e, 0x3d, -1,
     0x73, 0x74, 0x75, 0x12, 0x70, 0x71,
     0x3e, 0x3d, 0x1b, 0x13, 0x70, 0x71,
@@ -59,4 +59,4 @@ const char* PMU::String(int event) {
   return NULL;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */

@@ -1,7 +1,7 @@
-#ifndef YAMP_SRC_TIMER_H
-#define YAMP_SRC_TIMER_H
+#ifndef TRENDLINE_SRC_TIMER_H
+#define TRENDLINE_SRC_TIMER_H
 
-namespace yamp {
+namespace trendline {
 
 class Timer {
 public:
@@ -14,7 +14,7 @@ private:
   double boot_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_TIMER_H */
+#endif /* TRENDLINE_SRC_TIMER_H */
 

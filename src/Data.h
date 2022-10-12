@@ -1,16 +1,16 @@
-#ifndef YAMP_SRC_DATA_H
-#define YAMP_SRC_DATA_H
+#ifndef TRENDLINE_SRC_DATA_H
+#define TRENDLINE_SRC_DATA_H
 
 #include "Type.h"
 
-#define YAMP_MAX_ROWS 1024 * 1024
+#define TRENDLINE_MAX_ROWS 1024 * 1024
 
-typedef struct _yamp_row {
+typedef struct _trendline_row {
   double time;
-  u_int64_t data[YAMP_MAX_EVENTS];
-} yamp_row;
+  u_int64_t data[TRENDLINE_MAX_EVENTS];
+} trendline_row;
 
-namespace yamp {
+namespace trendline {
 
 class Data {
 public:
@@ -22,13 +22,16 @@ public:
   int Commit();
 
   int nrows() { return rid_; }
-  yamp_row* rows() { return rows_; }
+  trendline_row* rows() { return rows_; }
+
+public:
+  static int ClearRow(trendline_row* row);
 
 private:
   int rid_;
-  yamp_row* rows_;
+  trendline_row* rows_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_DATA_H */
+#endif /* TRENDLINE_SRC_DATA_H */

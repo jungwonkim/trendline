@@ -11,12 +11,12 @@
 #include <sys/mman.h>
 #include <sys/syscall.h>
 
-namespace yamp {
+namespace trendline {
 
 Sampler::Sampler(int cpu, int* events, int freq, int start) {
   cpu_ = cpu;
   nevents_ = 0;
-  for (int i = 0; i < YAMP_MAX_EVENTS; i++) {
+  for (int i = 0; i < TRENDLINE_MAX_EVENTS; i++) {
     if (events[i] < 0) break;
     events_[i] = events[i];
     nevents_++;
@@ -57,27 +57,27 @@ int Sampler::Init() {
     }
     ioctl(fd_[i], PERF_EVENT_IOC_ID, id_ + i);
   }
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
 int Sampler::InitParams() {
 #if 0
-  const char* env = getenv("YAMP_EVENTS");
+  const char* env = getenv("TRENDLINE_EVENTS");
   char str[256];
   if (env) strncpy(str, env, strlen(env) + 1);
-  else strncpy(str, YAMP_DEFAULT_EVENTS, strlen(YAMP_DEFAULT_EVENTS) + 1);
+  else strncpy(str, TRENDLINE_DEFAULT_EVENTS, strlen(TRENDLINE_DEFAULT_EVENTS) + 1);
 
   char* rest = str;
   char* a = NULL;
   while ((a = strtok_r(rest, ",", &rest))) {
     attr_[nevents_].config = (int) strtol(a, NULL, 16);
     nevents_++;
-    if (nevents_ >= YAMP_MAX_EVENTS) break;
+    if (nevents_ >= TRENDLINE_MAX_EVENTS) break;
   }
 
   _info("cpu[%d] freq[%d] nevents[%d]", cpu_, freq_, nevents_);
 #endif
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
 void Sampler::Run() {
@@ -112,7 +112,7 @@ int Sampler::Sample() {
   if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
   if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
 
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */

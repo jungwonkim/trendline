@@ -1,9 +1,9 @@
-#ifndef YAMP_SRC_PRINTER_H
-#define YAMP_SRC_PRINTER_H
+#ifndef TRENDLINE_SRC_PRINTER_H
+#define TRENDLINE_SRC_PRINTER_H
 
 #include <stdio.h>
 
-namespace yamp {
+namespace trendline {
 
 class Data;
 class PMU;
@@ -22,6 +22,6 @@ private:
 
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_PRINTER_H */
+#endif /* TRENDLINE_SRC_PRINTER_H */

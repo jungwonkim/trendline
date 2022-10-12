@@ -1,7 +1,8 @@
-set(APP yamp)
+set(APP tl)
 
-set(YAMP_SOURCES
+set(TRENDLINE_SOURCES
   Command.cpp
+  CommandAggregate.cpp
   CommandRecord.cpp
   Data.cpp
   Main.cpp
@@ -13,8 +14,8 @@ set(YAMP_SOURCES
   Timer.cpp
 )
 
-add_executable(${APP} ${YAMP_SOURCES})
+add_executable(${APP} ${TRENDLINE_SOURCES})
 
 target_link_libraries(${APP} "-pthread")
 
-install(TARGETS yamp DESTINATION bin)
+install(TARGETS ${APP} DESTINATION bin)

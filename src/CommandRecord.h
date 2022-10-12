@@ -1,11 +1,11 @@
-#ifndef YAMP_SRC_COMMAND_RECORD_H
-#define YAMP_SRC_COMMAND_RECORD_H
+#ifndef TRENDLINE_SRC_COMMAND_RECORD_H
+#define TRENDLINE_SRC_COMMAND_RECORD_H
 
 #include "Command.h"
 #include "Type.h"
 #include <stdio.h>
 
-namespace yamp {
+namespace trendline {
 
 class Sampler;
 class Printer;
@@ -13,15 +13,15 @@ class PMU;
 
 class CommandRecord : public Command {
 public:
-  CommandRecord();
+  CommandRecord(int argc, char** argv);
   virtual ~CommandRecord();
 
-  virtual int Init(int* argc, char*** argv);
+  virtual int Init();
   virtual int Run();
 
 private:
   int InitPrinterOutput();
-  int GetOptions();
+  int InitOptions();
 
 private:
   bool csv_;
@@ -30,15 +30,12 @@ private:
   int ncpus_;
   int nsamplers_;
 
-  int argc_;
-  char** argv_;
-
-  Sampler* samplers_[YAMP_MAX_EVENTS_SET];
+  Sampler* samplers_[TRENDLINE_MAX_EVENTS_SET];
   Printer* printer_;
   FILE* fp_;
   PMU* pmu_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_COMMAND_RECORD_H */
+#endif /* TRENDLINE_SRC_COMMAND_RECORD_H */

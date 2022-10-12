@@ -1,9 +1,9 @@
-#ifndef YAMP_SRC_PLATFORM_H
-#define YAMP_SRC_PLATFORM_H
+#ifndef TRENDLINE_SRC_PLATFORM_H
+#define TRENDLINE_SRC_PLATFORM_H
 
 #include "Type.h"
 
-namespace yamp {
+namespace trendline {
 
 class Command;
 class Sampler;
@@ -43,6 +43,6 @@ private:
   static Platform* singleton_;
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_PLATFORM_H */
+#endif /* TRENDLINE_SRC_PLATFORM_H */

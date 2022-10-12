@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-namespace yamp {
+namespace trendline {
 
 Printer::Printer(FILE* fp) {
   fp_ = fp;
@@ -30,7 +30,7 @@ int Printer::Print(Sampler* sampler) {
   }
   fprintf(fp_, "\n");
 
-  yamp_row* rows = data->rows();
+  trendline_row* rows = data->rows();
   for (int i = 0; i < data->nrows(); i++) {
     fprintf(fp_, "%.5f", rows[i].time);
     for (int j = 0; j < nevents; j++) {
@@ -41,8 +41,8 @@ int Printer::Print(Sampler* sampler) {
 
   fflush(fp_);
 
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */
 

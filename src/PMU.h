@@ -1,9 +1,9 @@
-#ifndef YAMP_SRC_PMU_H
-#define YAMP_SRC_PMU_H
+#ifndef TRENDLINE_SRC_PMU_H
+#define TRENDLINE_SRC_PMU_H
 
 #include "Type.h"
 
-namespace yamp {
+namespace trendline {
 
 class PMU {
 public:
@@ -15,9 +15,9 @@ public:
   int* Events(int i) { return events_[i]; }
 
 private:
-  int (*events_)[YAMP_MAX_EVENTS];
+  int (*events_)[TRENDLINE_MAX_EVENTS];
 };
 
-} /* namespace yamp */
+} /* namespace trendline */
 
-#endif /* YAMP_SRC_PMU_H */
+#endif /* TRENDLINE_SRC_PMU_H */

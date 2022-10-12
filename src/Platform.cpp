@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-namespace yamp {
+namespace trendline {
 
 Platform::Platform() {
   init_ = false;
@@ -30,17 +30,16 @@ int Platform::Init(int* argc, char*** argv) {
 
   if (argc_ < 2) {
     _error("argc[%d]", argc_);
-    return YAMP_ERR;
+    return TRENDLINE_ERR;
   }
 
-  cmd_ = Command::CreateCommand(argv_[1]);
-  if (!cmd_) return YAMP_ERR;
-  if (cmd_) cmd_->Init(argc, argv);
-  return YAMP_OK;
+  cmd_ = Command::CreateCommand(argv_[1], *argc, *argv);
+  if (cmd_) return cmd_->Init();
+  return TRENDLINE_ERR;
 }
 
 int Platform::Run() {
-  return cmd_ ? cmd_->Run() : YAMP_ERR;
+  return cmd_ ? cmd_->Run() : TRENDLINE_ERR;
 }
 
 double Platform::Now() {
@@ -55,7 +54,7 @@ Platform* Platform::GetPlatform() {
 }
 
 int Platform::Finalize() {
-  return YAMP_OK;
+  return TRENDLINE_OK;
 }
 
-} /* namespace yamp */
+} /* namespace trendline */
