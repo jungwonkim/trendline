@@ -1,6 +1,8 @@
 #ifndef YAMP_SRC_PRINTER_H
 #define YAMP_SRC_PRINTER_H
 
+#include <stdio.h>
+
 namespace yamp {
 
 class Data;
@@ -9,15 +11,14 @@ class Sampler;
 
 class Printer {
 public:
-  Printer(Sampler* sampler);
+  Printer(FILE* fp);
   ~Printer();
 
-  int Print(Data* data);
+  int Print(Sampler* sampler);
 
 private:
-  Sampler* sampler_;
+  FILE* fp_;
   PMU* pmu_;
-  int nevents_;
 
 };
 

@@ -1,6 +1,8 @@
 set(APP yamp)
 
 set(YAMP_SOURCES
+  Command.cpp
+  CommandRecord.cpp
   Data.cpp
   Main.cpp
   Platform.cpp

@@ -16,7 +16,6 @@ struct read_format {
 namespace yamp {
 
 class Data;
-class Printer;
 class Timer;
 
 class Sampler : public Thread {
@@ -29,6 +28,7 @@ public:
   int Sample();
   int Print();
 
+  Data* data() { return data_; }
   int cpu() { return cpu_; }
   int nevents() { return nevents_; }
   int event(int i) { return events_[i]; }
@@ -52,7 +52,6 @@ private:
   pid_t pid_;
 
   Data* data_;
-  Printer* printer_;
   Timer* timer_;
 };
 

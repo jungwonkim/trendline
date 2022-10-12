@@ -26,7 +26,6 @@ Sampler::Sampler(int cpu, int* events, int freq, int start) {
   pid_ = -1;
 
   data_ = new Data();
-  printer_ = new Printer(this);
   timer_ = Platform::GetPlatform()->timer();
   Init();
 }
@@ -35,7 +34,6 @@ Sampler::~Sampler() {
   for (int i = 0; i < nevents_; i++) {
     if (fd_[i] != -1) close(fd_[i]);
   }
-  delete printer_;
   delete data_;
 }
 
@@ -115,10 +113,6 @@ int Sampler::Sample() {
   if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
 
   return YAMP_OK;
-}
-
-int Sampler::Print() {
-  return printer_->Print(data_);
 }
 
 } /* namespace yamp */

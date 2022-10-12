@@ -11,8 +11,8 @@
 
 namespace yamp {
 
-Printer::Printer(Sampler* sampler) {
-  sampler_ = sampler;
+Printer::Printer(FILE* fp) {
+  fp_ = fp;
   pmu_ = Platform::GetPlatform()->pmu();
 }
 
@@ -20,33 +20,26 @@ Printer::~Printer() {
 
 }
 
-int Printer::Print(Data* data) {
-  FILE* fp = stderr;
-  if (Platform::GetPlatform()->csv()) {
-    char filename[256];
-    sprintf(filename, YAMP_LOG_FILENAME, Platform::GetPlatform()->sid());
-    fp = fopen(filename, "a");
-  }
+int Printer::Print(Sampler* sampler) {
+  int nevents = sampler->nevents();
+  Data* data = sampler->data();
 
-  nevents_ = sampler_->nevents();
-  fprintf(fp, "TIME(CPU%d)", sampler_->cpu());
-  for(int i = 0; i < nevents_; i++) {
-    fprintf(fp, ",%s", pmu_->String(sampler_->event(i)));
+  fprintf(fp_, "TIME(CPU%d)", sampler->cpu());
+  for(int i = 0; i < nevents; i++) {
+    fprintf(fp_, ",%s", pmu_->String(sampler->event(i)));
   }
-  fprintf(fp, "\n");
+  fprintf(fp_, "\n");
 
   yamp_row* rows = data->rows();
   for (int i = 0; i < data->nrows(); i++) {
-    fprintf(fp, "%.5f", rows[i].time);
-    for (int j = 0; j < nevents_; j++) {
-      fprintf(fp, ",%lld", rows[i].data[j]);
+    fprintf(fp_, "%.5f", rows[i].time);
+    for (int j = 0; j < nevents; j++) {
+      fprintf(fp_, ",%lld", rows[i].data[j]);
     }
-    fprintf(fp, "\n");
+    fprintf(fp_, "\n");
   }
 
-  fflush(fp);
-
-  if (fp != stderr) fclose(fp);
+  fflush(fp_);
 
   return YAMP_OK;
 }

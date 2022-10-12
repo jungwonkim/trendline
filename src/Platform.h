@@ -5,6 +5,7 @@
 
 namespace yamp {
 
+class Command;
 class Sampler;
 class Timer;
 class PMU;
@@ -19,42 +20,27 @@ public:
   int Finalize();
   int Run();
 
-  int sid() { return sid_; }
   PMU* pmu() { return pmu_; }
   Timer* timer() { return timer_; }
 
-  bool csv() { return csv_; }
   double Now();
 
 public:
   static Platform* GetPlatform();
 
 private:
-  int SetSID();
-  int InitEventsSet();
-  int GetOptions();
-
-private:
-  int* argc_;
-  int cmd_;
-  char*** argv_;
+  int argc_;
+  char** argv_;
   bool init_;
   bool finalize_;
-  bool csv_;
-  int freq_;
-  int start_;
-  int ncpus_;
-  int nsamplers_;
-  int sid_;
 
-  Sampler* samplers_[YAMP_MAX_EVENTS_SET];
-
+  Command* cmd_;
   PMU* pmu_;
+
   Timer* timer_;
 
 private:
   static Platform* singleton_;
-
 };
 
 } /* namespace yamp */
