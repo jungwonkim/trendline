@@ -20,11 +20,12 @@ class Timer;
 
 class Sampler : public Thread {
 public:
-  Sampler(int cpu, int* events, int freq, int start);
+  Sampler(int cpu, int* events, int freq);
   virtual ~Sampler();
 
   virtual void Run();
   int Init();
+  int Reset();
   int Sample();
   int Print();
 
@@ -34,22 +35,14 @@ public:
   int event(int i) { return events_[i]; }
   int freq() { return freq_; }
 
-  void set_pid(pid_t pid) { pid_ = pid; }
-
-private:
-  int InitParams();
-
 private:
   int cpu_;
   int events_[TRENDLINE_MAX_EVENTS];
   int nevents_;
   int freq_;
-  int start_;
   struct perf_event_attr attr_[TRENDLINE_MAX_EVENTS];
   int fd_[TRENDLINE_MAX_EVENTS];
   u_int64_t id_[TRENDLINE_MAX_EVENTS];
-
-  pid_t pid_;
 
   Data* data_;
   Timer* timer_;

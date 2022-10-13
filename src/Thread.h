@@ -12,7 +12,8 @@ public:
   virtual ~Thread();
 
   void Start();
-  virtual void Stop();
+  virtual void Stop(bool sync);
+  virtual void Join();
   virtual void Sleep();
   virtual void Invoke();
 

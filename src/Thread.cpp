@@ -10,7 +10,7 @@ Thread::Thread() {
 }
 
 Thread::~Thread() {
-  Stop();
+  Stop(true);
   sem_destroy(&sem_);
 }
 
@@ -20,10 +20,17 @@ void Thread::Start() {
   pthread_create(&thread_, NULL, &Thread::ThreadFunc, this);
 }
 
-void Thread::Stop() {
+void Thread::Stop(bool sync) {
   if (!thread_) return;
   running_ = false;
   Invoke();
+  if (!sync) return;
+  pthread_join(thread_, NULL);
+  thread_ = (pthread_t) NULL;
+}
+
+void Thread::Join() {
+  if (!thread_) return;
   pthread_join(thread_, NULL);
   thread_ = (pthread_t) NULL;
 }

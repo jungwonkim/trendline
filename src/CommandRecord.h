@@ -19,14 +19,13 @@ public:
   virtual int Init();
   virtual int Run();
 
-private:
+protected:
   int InitPrinterOutput();
   int InitOptions();
 
-private:
+protected:
   bool csv_;
   int freq_;
-  int start_;
   int ncpus_;
   int nsamplers_;
 

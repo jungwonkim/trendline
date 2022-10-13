@@ -32,6 +32,7 @@ int CommandAggregate::Init() {
 
 int CommandAggregate::Run() {
   char* filename = argv_[optind + 1];
+  if (!filename) return TRENDLINE_ERR;
   _info("filename[%s] aggr[%d] skip_begin[%d] skip_end[%d]", filename, aggr_, skip0_, skip1_);
   FILE* fp = fopen(filename, "r");
 
@@ -49,13 +50,14 @@ int CommandAggregate::Run() {
       lines = 0;
       Data::ClearRow(&row);
     } else {
+      if (++lines <= skip0_) continue;
       char* s = NULL;
       char* rest = line;
       row.time = strtod(strtok_r(rest, ",", &rest), NULL);
       for (int i = 0; i < nevents; i++) {
         row.data[i] += atoi(strtok_r(rest, ",", &rest));
       }
-      if (++lines % aggr_ == 0) {
+      if (lines % aggr_ == 0) {
         fprintf(fp_, "%.5f", row.time);
         for (int j = 0; j < nevents; j++) {
           fprintf(fp_, ",%lld", row.data[j]);

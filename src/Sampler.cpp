@@ -13,7 +13,7 @@
 
 namespace trendline {
 
-Sampler::Sampler(int cpu, int* events, int freq, int start) {
+Sampler::Sampler(int cpu, int* events, int freq) {
   cpu_ = cpu;
   nevents_ = 0;
   for (int i = 0; i < TRENDLINE_MAX_EVENTS; i++) {
@@ -22,8 +22,6 @@ Sampler::Sampler(int cpu, int* events, int freq, int start) {
     nevents_++;
   }
   freq_ = freq;
-  start_ = start;
-  pid_ = -1;
 
   data_ = new Data();
   timer_ = Platform::GetPlatform()->timer();
@@ -60,26 +58,6 @@ int Sampler::Init() {
   return TRENDLINE_OK;
 }
 
-int Sampler::InitParams() {
-#if 0
-  const char* env = getenv("TRENDLINE_EVENTS");
-  char str[256];
-  if (env) strncpy(str, env, strlen(env) + 1);
-  else strncpy(str, TRENDLINE_DEFAULT_EVENTS, strlen(TRENDLINE_DEFAULT_EVENTS) + 1);
-
-  char* rest = str;
-  char* a = NULL;
-  while ((a = strtok_r(rest, ",", &rest))) {
-    attr_[nevents_].config = (int) strtol(a, NULL, 16);
-    nevents_++;
-    if (nevents_ >= TRENDLINE_MAX_EVENTS) break;
-  }
-
-  _info("cpu[%d] freq[%d] nevents[%d]", cpu_, freq_, nevents_);
-#endif
-  return TRENDLINE_OK;
-}
-
 void Sampler::Run() {
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);
@@ -87,13 +65,24 @@ void Sampler::Run() {
   if (pthread_setaffinity_np(thread_, sizeof(cpuset), &cpuset) != 0)
     _error("cpu[%d]", cpu_);
 
-  if (start_ > 0) sleep(start_);
-  if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
-  if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
+  Reset();
+
   do {
     usleep(1000 * 1000 / freq_);
     Sample();
   } while (running_);
+}
+
+int Sampler::Reset() {
+  if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) {
+    perror("ioctl");
+    return TRENDLINE_ERR;
+  }
+  if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) {
+    perror("ioctl");
+    return TRENDLINE_ERR;
+  }
+  return TRENDLINE_OK;
 }
 
 int Sampler::Sample() {
@@ -109,8 +98,7 @@ int Sampler::Sample() {
   }
   data_->Commit();
 
-  if (ioctl(fd_[0], PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
-  if (ioctl(fd_[0], PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
+  Reset();
 
   return TRENDLINE_OK;
 }

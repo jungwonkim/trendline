@@ -15,7 +15,6 @@ namespace trendline {
 CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
   ncpus_ = TRENDLINE_MAX_EVENTS_SET;
   freq_ = 10;
-  start_ = 0;
   csv_ = false;
 
   nsamplers_ = 0;
@@ -53,7 +52,7 @@ int CommandRecord::InitPrinterOutput() {
 
 int CommandRecord::Run() {
   for (int i = 0; i < ncpus_; i++) {
-    samplers_[nsamplers_++] = new Sampler(i, pmu_->Events(i), freq_, start_);
+    samplers_[nsamplers_++] = new Sampler(i, pmu_->Events(i), freq_);
   }
 
   pid_t pid = fork();
@@ -65,18 +64,13 @@ int CommandRecord::Run() {
       exit(EXIT_FAILURE);
     }
 
-  for (int i = 0; i < nsamplers_; i++) {
-    samplers_[i]->set_pid(pid);
-    if (freq_ > 0) samplers_[i]->Start();
-  }
+  for (int i = 0; i < nsamplers_; i++) samplers_[i]->Start();
 
   int status;
   waitpid(pid, &status, 0);
 
-  for (int i = 0; i < nsamplers_; i++) {
-    if (freq_ > 0) samplers_[i]->Stop();
-    else samplers_[i]->Sample();
-  }
+  for (int i = 0; i < nsamplers_; i++) samplers_[i]->Stop(false);
+  for (int i = 0; i < nsamplers_; i++) samplers_[i]->Join();
   for (int i = 0; i < nsamplers_; i++)
     if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(samplers_[i]);
   return TRENDLINE_OK;
@@ -84,7 +78,7 @@ int CommandRecord::Run() {
 
 int CommandRecord::InitOptions() {
   int opt;
-  while ((opt = getopt(argc_, argv_, "C:e:F:s:o")) != -1) {
+  while ((opt = getopt(argc_, argv_, "C:e:F:o")) != -1) {
     switch (opt) {
       case 'C':
         ncpus_ = atoi(optarg);
@@ -107,11 +101,7 @@ int CommandRecord::InitOptions() {
       }
       case 'F':
         freq_ = atoi(optarg);
-        if (freq_ < 0) freq_ = 1;
-        break;
-      case 's':
-        start_ = atoi(optarg);
-        if (start_ < 0) freq_ = 0;
+        if (freq_ <= 0) freq_ = 1;
         break;
       case 'o':
         csv_ = true;
@@ -122,6 +112,5 @@ int CommandRecord::InitOptions() {
   }
   return TRENDLINE_OK;
 }
-
 
 } /* namespace trendline */
