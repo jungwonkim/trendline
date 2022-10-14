@@ -1,2 +1,2 @@
 # trendline
-Yet Another Microarchitectural Profiler
+Yet Another Microarchitecture Profiler
