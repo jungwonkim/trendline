@@ -33,7 +33,6 @@ int CommandAggregate::Init() {
 int CommandAggregate::Run() {
   char* filename = argv_[optind + 1];
   if (!filename) return TRENDLINE_ERR;
-  _info("filename[%s] aggr[%d] skip_begin[%d] skip_end[%d]", filename, aggr_, skip0_, skip1_);
   FILE* fp = fopen(filename, "r");
 
   trendline_row row;
@@ -45,13 +44,15 @@ int CommandAggregate::Run() {
   while (getline(&line, &len, fp) != -1) {
     if (strncmp("TIME", line, 4) == 0) {
       nevents = 0;
-      for (int i = 0; i < len; i++) if (line[i] == ',') nevents++;
+      for (size_t i = 0; i < len; i++) {
+        if (line[i] == 0) break;
+        if (line[i] == ',') nevents++;
+      }
       fprintf(fp_, "%s", line);
       lines = 0;
       Data::ClearRow(&row);
     } else {
       if (++lines <= skip0_) continue;
-      char* s = NULL;
       char* rest = line;
       row.time = strtod(strtok_r(rest, ",", &rest), NULL);
       for (int i = 0; i < nevents; i++) {
@@ -60,7 +61,7 @@ int CommandAggregate::Run() {
       if (lines % aggr_ == 0) {
         fprintf(fp_, "%.5f", row.time);
         for (int j = 0; j < nevents; j++) {
-          fprintf(fp_, ",%lld", row.data[j]);
+          fprintf(fp_, ",%lu", row.data[j]);
         }
         fprintf(fp_, "\n");
         Data::ClearRow(&row);

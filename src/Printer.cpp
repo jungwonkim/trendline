@@ -34,7 +34,7 @@ int Printer::Print(Sampler* sampler) {
   for (int i = 0; i < data->nrows(); i++) {
     fprintf(fp_, "%.5f", rows[i].time);
     for (int j = 0; j < nevents; j++) {
-      fprintf(fp_, ",%lld", rows[i].data[j]);
+      fprintf(fp_, ",%lu", rows[i].data[j]);
     }
     fprintf(fp_, "\n");
   }

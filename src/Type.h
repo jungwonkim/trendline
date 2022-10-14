@@ -11,6 +11,6 @@
 #define TRENDLINE_LOG_FILENAME     "trendline-%04d.csv"
 
 #define TRENDLINE_MAX_EVENTS       6
-#define TRENDLINE_MAX_EVENTS_SET   11
+#define TRENDLINE_MAX_EVENTS_SET   15
 
 #endif /* TRENDLINE_SRC_TYPE_H */

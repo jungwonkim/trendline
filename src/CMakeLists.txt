@@ -17,6 +17,9 @@ set(TRENDLINE_SOURCES
 
 add_executable(${APP} ${TRENDLINE_SOURCES})
 
+add_compile_options(-Wall -Wextra)
+set(CMAKE_CXX_FLAGS "-Wall")
+
 target_link_libraries(${APP} "-pthread")
 
 install(TARGETS ${APP} DESTINATION bin)

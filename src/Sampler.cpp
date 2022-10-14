@@ -51,7 +51,7 @@ int Sampler::Init() {
     fd_[i] = syscall(__NR_perf_event_open, attr_ + i, 0, cpu_, lead, 0); 
     if (fd_[i] == -1) {
       perror("syscall");
-      _error("event[%d] config[0x%x]", i, attr_[i].config);
+      _error("event[%d] config[0x%llx]", i, attr_[i].config);
     }
     ioctl(fd_[i], PERF_EVENT_IOC_ID, id_ + i);
   }
@@ -89,11 +89,11 @@ int Sampler::Sample() {
   if (ioctl(fd_[0], PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP) == -1) perror("ioctl");
 
   struct read_format cnt;
-  ssize_t s = read(fd_[0], &cnt, sizeof(cnt));
+  if (read(fd_[0], &cnt, sizeof(cnt)) < 0) return TRENDLINE_ERR;
 
   data_->AddTime(timer_->Now());
-  for (int i = 0; i < cnt.nr; i++) {
-    if (id_[i] != cnt.values[i].id) _error("id[%llu] vs read_id[%llu]", id_[i], cnt.values[i].id);
+  for (u_int64_t i = 0; i < cnt.nr; i++) {
+    //if (id_[i] != cnt.values[i].id) _error("id[%llu] vs read_id[%llu]", id_[i], cnt.values[i].id);
     data_->AddCount(i, cnt.values[i].value);
   }
   data_->Commit();

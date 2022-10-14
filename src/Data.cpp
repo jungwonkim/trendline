@@ -6,7 +6,7 @@ namespace trendline {
 Data::Data() {
   rid_ = 0;
   if (posix_memalign((void**) &rows_, 0x1000, TRENDLINE_MAX_ROWS * sizeof(trendline_row)) != 0)
-    _error("TRENDLINE_MAX_ROWS[%llu]", TRENDLINE_MAX_ROWS);
+    _error("TRENDLINE_MAX_ROWS[%d]", TRENDLINE_MAX_ROWS);
 }
 
 Data::~Data() {
