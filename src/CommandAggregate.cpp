@@ -2,11 +2,9 @@
 #include "Debug.h"
 #include "Data.h"
 #include "Type.h"
-#include "PMU.h"
 #include "Sampler.h"
 #include "Timer.h"
 #include "Platform.h"
-#include "Printer.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>

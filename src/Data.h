@@ -7,7 +7,7 @@
 
 typedef struct _trendline_row {
   double time;
-  u_int64_t data[TRENDLINE_MAX_EVENTS];
+  u_int64_t data[TRENDLINE_MAX_COUNTERS];
 } trendline_row;
 
 namespace trendline {

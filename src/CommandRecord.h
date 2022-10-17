@@ -29,7 +29,7 @@ protected:
   int ncpus_;
   int nsamplers_;
 
-  Sampler* samplers_[TRENDLINE_MAX_EVENTS_SET];
+  Sampler** samplers_;
   Printer* printer_;
   FILE* fp_;
   PMU* pmu_;

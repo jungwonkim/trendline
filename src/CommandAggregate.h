@@ -8,9 +8,6 @@
 namespace trendline {
 
 class Data;
-class Sampler;
-class Printer;
-class PMU;
 
 class CommandAggregate : public Command {
 public:
@@ -31,10 +28,7 @@ private:
   int skip1_;
 
   Data* data_;
-  Sampler* samplers_[TRENDLINE_MAX_EVENTS_SET];
-  Printer* printer_;
   FILE* fp_;
-  PMU* pmu_;
 };
 
 } /* namespace trendline */

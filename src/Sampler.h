@@ -10,7 +10,7 @@ struct read_format {
   struct {
     u_int64_t value;
     u_int64_t id;
-  } values[TRENDLINE_MAX_EVENTS];
+  } values[TRENDLINE_MAX_COUNTERS];
 };
 
 namespace trendline {
@@ -37,12 +37,12 @@ public:
 
 private:
   int cpu_;
-  int events_[TRENDLINE_MAX_EVENTS];
+  int events_[TRENDLINE_MAX_COUNTERS];
   int nevents_;
   int freq_;
-  struct perf_event_attr attr_[TRENDLINE_MAX_EVENTS];
-  int fd_[TRENDLINE_MAX_EVENTS];
-  u_int64_t id_[TRENDLINE_MAX_EVENTS];
+  struct perf_event_attr attr_[TRENDLINE_MAX_COUNTERS];
+  int fd_[TRENDLINE_MAX_COUNTERS];
+  u_int64_t id_[TRENDLINE_MAX_COUNTERS];
 
   Data* data_;
   Timer* timer_;

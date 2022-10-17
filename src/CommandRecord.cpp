@@ -13,12 +13,12 @@
 namespace trendline {
 
 CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
-  ncpus_ = TRENDLINE_MAX_EVENTS_SET;
+  ncpus_ = Platform::GetPlatform()->pmu()->ngroups();
   freq_ = 10;
   csv_ = false;
 
-  nsamplers_ = 0;
-  for (int i = 0; i < TRENDLINE_MAX_EVENTS_SET; i++) samplers_[i] = NULL;
+  nsamplers_ = ncpus_;
+  samplers_ = new Sampler*[nsamplers_];
   printer_ = NULL;
   fp_ = stderr;
 
@@ -28,6 +28,8 @@ CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
 CommandRecord::~CommandRecord() {
   if (printer_) delete printer_;
   if (fp_ != stderr) fclose(fp_);
+  for (int i = 0; i < nsamplers_; i++) delete samplers_[i];
+  delete[] samplers_;
 }
 
 int CommandRecord::Init() {
@@ -52,7 +54,7 @@ int CommandRecord::InitPrinterOutput() {
 
 int CommandRecord::Run() {
   for (int i = 0; i < ncpus_; i++) {
-    samplers_[nsamplers_++] = new Sampler(i, pmu_->Events(i), freq_);
+    samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
   }
 
   pid_t pid = fork();

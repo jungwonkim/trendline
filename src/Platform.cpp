@@ -14,7 +14,7 @@ Platform::Platform() {
   init_ = false;
   finalize_ = false;
 
-  pmu_ = new PMU();
+  pmu_ = PMU::GetNeoverseV1();
   timer_ = new Timer();
 }
 

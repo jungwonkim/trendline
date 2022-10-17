@@ -2,6 +2,7 @@
 #include "Debug.h"
 #include "Data.h"
 #include "Platform.h"
+#include "PMU.h"
 #include "Printer.h"
 #include "Timer.h"
 #include <stdlib.h>
@@ -16,7 +17,7 @@ namespace trendline {
 Sampler::Sampler(int cpu, int* events, int freq) {
   cpu_ = cpu;
   nevents_ = 0;
-  for (int i = 0; i < TRENDLINE_MAX_EVENTS; i++) {
+  for (int i = 0; i < Platform::GetPlatform()->pmu()->ncounters(); i++) {
     if (events[i] < 0) break;
     events_[i] = events[i];
     nevents_++;
