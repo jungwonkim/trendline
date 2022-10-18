@@ -12,6 +12,7 @@ set(TRENDLINE_SOURCES
   Data.cpp
   Platform.cpp
   PMU.cpp
+  PMUICX.cpp
   PMUNeoverseV1.cpp
   Printer.cpp
   Sampler.cpp

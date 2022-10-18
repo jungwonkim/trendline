@@ -13,14 +13,13 @@ namespace trendline {
 Platform::Platform() {
   init_ = false;
   finalize_ = false;
-
-  pmu_ = PMU::GetNeoverseV1();
+  pmu_ = NULL;
   timer_ = new Timer();
 }
 
 Platform::~Platform() {
   if (!init_) return;
-  delete pmu_;
+  if (pmu_) delete pmu_;
   delete timer_;
 }
 
@@ -32,6 +31,9 @@ int Platform::Init(int* argc, char*** argv) {
     _error("argc[%d]", argc_);
     return TRENDLINE_ERR;
   }
+
+  pmu_ = PMU::GetPMU();
+  if (!pmu_) return TRENDLINE_ERR;
 
   cmd_ = Command::CreateCommand(argv_[1], *argc, *argv);
   if (cmd_) return cmd_->Init();

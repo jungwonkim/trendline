@@ -1,5 +1,6 @@
 #include "PMU.h"
 #include "Debug.h"
+#include "PMUICX.h"
 #include "PMUNeoverseV1.h"
 
 namespace trendline {
@@ -29,6 +30,33 @@ const char* PMU::String(int event) {
 int PMU::Event(const char* string) {
   if (s2e_.count(string) < 1) return -1;
   return s2e_[string];
+}
+
+PMU* PMU::GetPMU() {
+  PMU* pmu = NULL;
+  FILE* fp = fopen("/proc/cpuinfo", "rb");
+  char* line = 0;
+  size_t size = 0ULL;
+  while (getdelim(&line, &size, 0, fp) != -1) {
+    if (strstr(line, "Intel")) {
+      pmu = GetICX();
+      break;
+    }
+    if (strstr(line, "0xd40")) {
+      pmu = GetNeoverseV1();
+      break;
+    }
+  }
+  free(line);
+  fclose(fp);
+  return pmu; 
+}
+
+PMU* PMU::GetICX() {
+  PMU* pmu = new PMUICX();
+  pmu->InitS2E();
+  pmu->InitE2S();
+  return pmu;
 }
 
 PMU* PMU::GetNeoverseV1() {

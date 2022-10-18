@@ -28,6 +28,10 @@ protected:
   int InitE2S();
 
 public:
+  static PMU* GetPMU();
+
+private:
+  static PMU* GetICX();
   static PMU* GetNeoverseV1();
 
 protected:
