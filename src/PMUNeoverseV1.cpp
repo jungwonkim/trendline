@@ -2,6 +2,8 @@
 #include "Type.h"
 #include "Debug.h"
 
+// https://developer.arm.com/documentation/101427/0101/Debug-descriptions/Performance-Monitoring-Unit/PMU-events
+
 #define NCOUNTERS           6
 
 #define L1I_CACHE_REFILL    0x01

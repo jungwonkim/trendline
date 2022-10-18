@@ -2,6 +2,8 @@
 #include "Type.h"
 #include "Debug.h"
 
+// https://perfmon-events.intel.com/icelake.html
+
 #define NCOUNTERS                     8
 
 #define INST_RETIRED                  0xc0
