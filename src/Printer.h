@@ -11,13 +11,12 @@ class Sampler;
 
 class Printer {
 public:
-  Printer(FILE* fp);
+  Printer();
   ~Printer();
 
-  int Print(Sampler* sampler);
+  int Print(FILE* fp, Sampler* sampler);
 
 private:
-  FILE* fp_;
   PMU* pmu_;
 
 };

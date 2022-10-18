@@ -3,7 +3,6 @@
 
 #include "Command.h"
 #include "Type.h"
-#include <stdio.h>
 
 namespace trendline {
 
@@ -26,8 +25,8 @@ protected:
 protected:
   bool csv_;
   int freq_;
-  int ncpus_;
   int nsamplers_;
+  int max_nsamplers_;
 
   Sampler** samplers_;
   Printer* printer_;

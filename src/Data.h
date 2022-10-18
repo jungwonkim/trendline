@@ -3,8 +3,6 @@
 
 #include "Type.h"
 
-#define TRENDLINE_MAX_ROWS 1024 * 1024
-
 typedef struct _trendline_row {
   double time;
   u_int64_t data[TRENDLINE_MAX_COUNTERS];
@@ -20,8 +18,12 @@ public:
   int AddTime(double time);
   int AddCount(int idx, u_int64_t data);
   int Commit();
+  int Reset();
+  int DeleteTail(int n);
 
+  void set_nevents(int n) { nevents_ = n; }
   int nrows() { return rid_; }
+  int nevents() { return nevents_; }
   trendline_row* rows() { return rows_; }
 
 public:
@@ -29,6 +31,7 @@ public:
 
 private:
   int rid_;
+  int nevents_;
   trendline_row* rows_;
 };
 

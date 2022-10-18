@@ -17,9 +17,7 @@ CommandStat::~CommandStat() {
 }
 
 int CommandStat::Run() {
-  for (int i = 0; i < ncpus_; i++) {
-    samplers_[nsamplers_++] = new Sampler(i, pmu_->Events(i), freq_);
-  }
+  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
 
   pid_t pid = fork();
   int prog = optind + 1;
@@ -37,7 +35,7 @@ int CommandStat::Run() {
 
   for (int i = 0; i < nsamplers_; i++) samplers_[i]->Sample();
   for (int i = 0; i < nsamplers_; i++)
-    if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(samplers_[i]);
+    if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(fp_, samplers_[i]);
   return TRENDLINE_OK;
 }
 

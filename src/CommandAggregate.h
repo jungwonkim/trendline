@@ -3,11 +3,8 @@
 
 #include "Command.h"
 #include "Type.h"
-#include <stdio.h>
 
 namespace trendline {
-
-class Data;
 
 class CommandAggregate : public Command {
 public:
@@ -18,8 +15,8 @@ public:
   virtual int Run();
 
 private:
-  int InitPrinterOutput();
   int InitOptions();
+  int InitPrinterOutput();
 
 private:
   int aggr_;
@@ -27,7 +24,7 @@ private:
   int skip0_;
   int skip1_;
 
-  Data* data_;
+  char* inputfile_;
   FILE* fp_;
 };
 

@@ -13,13 +13,12 @@
 namespace trendline {
 
 CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
-  ncpus_ = Platform::GetPlatform()->pmu()->ngroups();
   freq_ = 10;
   csv_ = false;
 
-  nsamplers_ = ncpus_;
+  max_nsamplers_ = nsamplers_ = Platform::GetPlatform()->pmu()->ngroups();
   samplers_ = new Sampler*[nsamplers_];
-  printer_ = NULL;
+  printer_ = new Printer();
   fp_ = stderr;
 
   pmu_ = Platform::GetPlatform()->pmu();
@@ -34,8 +33,6 @@ CommandRecord::~CommandRecord() {
 
 int CommandRecord::Init() {
   InitOptions();
-  InitPrinterOutput();
-  printer_ = new Printer(fp_);
   return TRENDLINE_OK;
 }
 
@@ -53,9 +50,7 @@ int CommandRecord::InitPrinterOutput() {
 }
 
 int CommandRecord::Run() {
-  for (int i = 0; i < ncpus_; i++) {
-    samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
-  }
+  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
 
   pid_t pid = fork();
   int prog = optind + 1;
@@ -73,8 +68,10 @@ int CommandRecord::Run() {
 
   for (int i = 0; i < nsamplers_; i++) samplers_[i]->Stop(false);
   for (int i = 0; i < nsamplers_; i++) samplers_[i]->Join();
+
+  InitPrinterOutput();
   for (int i = 0; i < nsamplers_; i++)
-    if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(samplers_[i]);
+    if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(fp_, samplers_[i]);
   return TRENDLINE_OK;
 }
 
@@ -83,8 +80,9 @@ int CommandRecord::InitOptions() {
   while ((opt = getopt(argc_, argv_, "C:e:F:o")) != -1) {
     switch (opt) {
       case 'C':
-        ncpus_ = atoi(optarg);
-        if (ncpus_ < 1) ncpus_ = 1;
+        nsamplers_ = atoi(optarg);
+        if (nsamplers_ < 1) nsamplers_ = 1;
+        else if (nsamplers_ > max_nsamplers_) nsamplers_ = max_nsamplers_;
         break;
       case 'e': {
         char* s = NULL;

@@ -1,6 +1,8 @@
 #include "Data.h"
 #include "Debug.h"
 
+#define TRENDLINE_MAX_ROWS 1024 * 1024
+
 namespace trendline {
 
 Data::Data() {
@@ -29,6 +31,17 @@ int Data::Commit() {
     return TRENDLINE_ERR;
   }
   rid_++;
+  return TRENDLINE_OK;
+}
+
+int Data::Reset() {
+  rid_ = 0;
+  nevents_ = 0;
+  return TRENDLINE_OK;
+}
+
+int Data::DeleteTail(int n) {
+  rid_ -= n;
   return TRENDLINE_OK;
 }
 

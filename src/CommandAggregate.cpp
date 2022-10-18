@@ -16,22 +16,33 @@ CommandAggregate::CommandAggregate(int argc, char** argv) : Command(argc, argv) 
   skip0_ = 0;
   skip1_ = 0;
 
+  csv_ = false;
   fp_ = stderr;
-  data_ = new Data();
 }
 
 CommandAggregate::~CommandAggregate() {
-  delete data_;
 }
 
 int CommandAggregate::Init() {
-  return InitOptions();
+  InitOptions();
+  inputfile_ = argv_[optind + 1];
+  if (!inputfile_) return TRENDLINE_ERR;
+  InitPrinterOutput();
+  return TRENDLINE_OK;
+}
+
+int CommandAggregate::InitPrinterOutput() {
+  if (!csv_) return TRENDLINE_OK;
+  char filename[256];
+  size_t len_prefix = strlen(inputfile_) - strlen(TRENDLINE_LOG_FILENAME_EXT) - 1;
+  strncpy(filename, inputfile_, len_prefix);
+  sprintf(filename + len_prefix, "-a%d.%s", aggr_, TRENDLINE_LOG_FILENAME_EXT);
+  fp_ = fopen(filename, "w");
+  return fp_ ? TRENDLINE_OK : TRENDLINE_ERR;
 }
 
 int CommandAggregate::Run() {
-  char* filename = argv_[optind + 1];
-  if (!filename) return TRENDLINE_ERR;
-  FILE* fp = fopen(filename, "r");
+  FILE* input = fopen(inputfile_, "r");
 
   trendline_row row;
 
@@ -39,7 +50,7 @@ int CommandAggregate::Run() {
   int lines = 0;
   char* line = NULL;
   size_t len = 0;
-  while (getline(&line, &len, fp) != -1) {
+  while (getline(&line, &len, input) != -1) {
     if (strncmp("TIME", line, 4) == 0) {
       nevents = 0;
       for (size_t i = 0; i < len; i++) {
@@ -52,9 +63,10 @@ int CommandAggregate::Run() {
     } else {
       if (++lines <= skip0_) continue;
       char* rest = line;
+      char* end;
       row.time = strtod(strtok_r(rest, ",", &rest), NULL);
       for (int i = 0; i < nevents; i++) {
-        row.data[i] += atoi(strtok_r(rest, ",", &rest));
+        row.data[i] += strtoull(strtok_r(rest, ",", &rest), &end, 10);
       }
       if (lines % aggr_ == 0) {
         fprintf(fp_, "%.5f", row.time);
@@ -67,7 +79,7 @@ int CommandAggregate::Run() {
     }
   }
 
-  fclose(fp);
+  fclose(input);
 
   fflush(fp_);
   return TRENDLINE_OK;
@@ -85,7 +97,7 @@ int CommandAggregate::InitOptions() {
         char* skip = strtok_r(rest, ",", &rest);
         skip0_ = skip ? atoi(skip) : 0;
         skip = strtok_r(rest, ",", &rest);
-        skip1_ = skip ? atoi(skip) : 0;
+        skip1_ = skip ? atoi(skip) : skip0_;
         break;
       }
       case 'o':
