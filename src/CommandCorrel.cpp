@@ -155,9 +155,9 @@ int CommandCorrel::CalculatePearsons() {
     fprintf(fp_, "\n");
   }
 
-  delete data_minus_diff;
-  delete data_minus_diff_sq;
-  delete data_minus_diff_sq_sum;
+  delete[] data_minus_diff;
+  delete[] data_minus_diff_sq;
+  delete[] data_minus_diff_sq_sum;
 
   return TRENDLINE_OK;
 }
