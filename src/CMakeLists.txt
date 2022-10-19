@@ -33,6 +33,7 @@ else()
   message(FATAL_ERROR "NOT SUPPORT ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 configure_file(Config.h.in Config.h)
+include_directories(${PROJECT_BINARY_DIR}/src)
 
 add_library(${LIB} ${TRENDLINE_SOURCES})
 add_executable(${APP} ${TL_SOURCES})
