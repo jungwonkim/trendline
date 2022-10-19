@@ -12,3 +12,4 @@ int main(int argc, char** argv) {
   printf("event  0x%x\n", pmu->Event("DEAD_CAFE"));
   return 0;
 }
+

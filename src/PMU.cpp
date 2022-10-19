@@ -53,17 +53,11 @@ PMU* PMU::GetPMU() {
 }
 
 PMU* PMU::GetICX() {
-  PMU* pmu = new PMUICX();
-  pmu->InitS2E();
-  pmu->InitE2S();
-  return pmu;
+  return new PMUICX();
 }
 
 PMU* PMU::GetNeoverseV1() {
-  PMU* pmu = new PMUNeoverseV1();
-  pmu->InitS2E();
-  pmu->InitE2S();
-  return pmu;
+  return new PMUNeoverseV1();
 }
 
 } /* namespace trendline */
