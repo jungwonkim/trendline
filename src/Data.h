@@ -1,7 +1,7 @@
 #ifndef TRENDLINE_SRC_DATA_H
 #define TRENDLINE_SRC_DATA_H
 
-#include "Type.h"
+#include "Config.h"
 
 typedef struct _trendline_row {
   double time;

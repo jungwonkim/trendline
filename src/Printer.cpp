@@ -1,6 +1,5 @@
 #include "Printer.h"
 #include "Sampler.h"
-#include "Type.h"
 #include "Debug.h"
 #include "Data.h"
 #include "Platform.h"

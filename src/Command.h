@@ -1,6 +1,8 @@
 #ifndef TRENDLINE_SRC_COMMAND_H
 #define TRENDLINE_SRC_COMMAND_H
 
+#include "Config.h"
+
 #define TRENDLINE_COMMAND_STAT       1
 #define TRENDLINE_COMMAND_RECORD     2
 #define TRENDLINE_COMMAND_CSV        3

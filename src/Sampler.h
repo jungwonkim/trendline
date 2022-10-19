@@ -1,7 +1,7 @@
 #ifndef TRENDLINE_SRC_SAMPLER_H
 #define TRENDLINE_SRC_SAMPLER_H
 
-#include "Type.h"
+#include "Config.h"
 #include "Thread.h"
 #include <linux/perf_event.h>
 

@@ -1,7 +1,7 @@
 #ifndef TRENDLINE_SRC_PLATFORM_H
 #define TRENDLINE_SRC_PLATFORM_H
 
-#include "Type.h"
+#include "Config.h"
 
 namespace trendline {
 

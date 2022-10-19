@@ -1,6 +1,5 @@
 #include "CommandRecord.h"
 #include "Debug.h"
-#include "Type.h"
 #include "PMU.h"
 #include "Sampler.h"
 #include "Timer.h"

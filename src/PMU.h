@@ -1,7 +1,7 @@
 #ifndef TRENDLINE_SRC_PMU_H
 #define TRENDLINE_SRC_PMU_H
 
-#include "Type.h"
+#include "Config.h"
 #include <map>
 #include <string>
 

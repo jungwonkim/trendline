@@ -25,6 +25,15 @@ set(TL_SOURCES
   Main.cpp
 )
 
+if (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+  set(MAX_COUNTERS 6)
+elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+  set(MAX_COUNTERS 8)
+else()
+  message(FATAL_ERROR "NOT SUPPORT ${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+configure_file(Config.h.in Config.h)
+
 add_library(${LIB} ${TRENDLINE_SOURCES})
 add_executable(${APP} ${TL_SOURCES})
 

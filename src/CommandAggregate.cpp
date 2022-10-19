@@ -1,7 +1,6 @@
 #include "CommandAggregate.h"
 #include "Debug.h"
 #include "Data.h"
-#include "Type.h"
 #include "Sampler.h"
 #include "Timer.h"
 #include "Platform.h"

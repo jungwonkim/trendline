@@ -2,7 +2,7 @@
 #define TRENDLINE_SRC_COMMAND_AGGREGATE_H
 
 #include "Command.h"
-#include "Type.h"
+#include "Config.h"
 
 namespace trendline {
 

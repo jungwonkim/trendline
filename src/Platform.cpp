@@ -2,7 +2,6 @@
 #include "Command.h"
 #include "Debug.h"
 #include "Timer.h"
-#include "Type.h"
 #include "PMU.h"
 #include <stdlib.h>
 #include <unistd.h>

@@ -1,5 +1,4 @@
 #include "PMUNeoverseV1.h"
-#include "Type.h"
 #include "Debug.h"
 
 // https://developer.arm.com/documentation/101427/0101/Debug-descriptions/Performance-Monitoring-Unit/PMU-events

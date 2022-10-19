@@ -2,7 +2,6 @@
 #define TRENDLINE_SRC_COMMAND_RECORD_H
 
 #include "Command.h"
-#include "Type.h"
 
 namespace trendline {
 
