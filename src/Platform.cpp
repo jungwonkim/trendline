@@ -26,10 +26,7 @@ int Platform::Init(int* argc, char*** argv) {
   argc_ = *argc;
   argv_ = *argv;
 
-  if (argc_ < 2) {
-    _error("argc[%d]", argc_);
-    return TRENDLINE_ERR;
-  }
+  if (argc_ < 2) return TRENDLINE_ERR;
 
   pmu_ = PMU::GetPMU();
   if (!pmu_) return TRENDLINE_ERR;

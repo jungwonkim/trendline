@@ -2,7 +2,7 @@
 #include "Platform.h"
 
 int usage(char* cmd) {
-  printf("\n usage: %s [stats | record | aggregate] [-e EVENTSET] [-F FREQ] [-o] -- PROGRAM [ARGS]\n\n", cmd);
+  printf("\n usage: %s [stats | record | list | aggregate] [-C CPU] [-F FREQ] [-G GROUP] [-o] -- PROGRAM [ARGS]\n\n", cmd);
   return 1;
 }
 

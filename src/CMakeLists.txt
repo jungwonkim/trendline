@@ -6,6 +6,7 @@ set(APP tl)
 set(TRENDLINE_SOURCES
   Command.cpp
   CommandAggregate.cpp
+  CommandList.cpp
   CommandCorrel.cpp
   CommandStat.cpp
   CommandRecord.cpp

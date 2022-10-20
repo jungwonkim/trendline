@@ -17,7 +17,7 @@ CommandStat::~CommandStat() {
 }
 
 int CommandStat::Run() {
-  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
+  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, GetEvents(i), freq_);
 
   pid_t pid = fork();
   int prog = optind + 1;

@@ -13,6 +13,7 @@ namespace trendline {
 
 CommandRecord::CommandRecord(int argc, char** argv) : Command(argc, argv) {
   freq_ = 10;
+  group_ = 0;
   csv_ = false;
 
   max_nsamplers_ = nsamplers_ = Platform::GetPlatform()->pmu()->ngroups();
@@ -49,7 +50,7 @@ int CommandRecord::InitPrinterOutput() {
 }
 
 int CommandRecord::Run() {
-  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, pmu_->Events(i), freq_);
+  for (int i = 0; i < nsamplers_; i++) samplers_[i] = new Sampler(i, GetEvents(i), freq_);
 
   pid_t pid = fork();
   int prog = optind + 1;
@@ -74,9 +75,13 @@ int CommandRecord::Run() {
   return TRENDLINE_OK;
 }
 
+int* CommandRecord::GetEvents(int i) {
+  return pmu_->Events(i + group_);
+}
+
 int CommandRecord::InitOptions() {
   int opt;
-  while ((opt = getopt(argc_, argv_, "C:e:F:o")) != -1) {
+  while ((opt = getopt(argc_, argv_, "C:e:F:G:o")) != -1) {
     switch (opt) {
       case 'C':
         nsamplers_ = atoi(optarg);
@@ -101,6 +106,10 @@ int CommandRecord::InitOptions() {
       case 'F':
         freq_ = atoi(optarg);
         if (freq_ <= 0) freq_ = 1;
+        break;
+      case 'G':
+        group_ = atoi(optarg);
+        if (group_ < 0) group_ = 0;
         break;
       case 'o':
         csv_ = true;

@@ -20,10 +20,12 @@ public:
 protected:
   int InitPrinterOutput();
   int InitOptions();
+  int* GetEvents(int i);
 
 protected:
   bool csv_;
   int freq_;
+  int group_;
   int nsamplers_;
   int max_nsamplers_;
 
