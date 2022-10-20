@@ -32,6 +32,7 @@ public:
 
 private:
   static PMU* GetICX();
+  static PMU* GetNeoverseN1();
   static PMU* GetNeoverseV1();
 
 protected:

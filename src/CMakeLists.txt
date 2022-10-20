@@ -14,6 +14,7 @@ set(TRENDLINE_SOURCES
   PMU.cpp
   PMUICX.cpp
   PMUNeoverseV1.cpp
+  PMUNeoverseN1.cpp
   Printer.cpp
   Sampler.cpp
   Thread.cpp
@@ -35,7 +36,7 @@ endif()
 configure_file(Config.h.in Config.h)
 include_directories(${PROJECT_BINARY_DIR}/src)
 
-add_library(${LIB} ${TRENDLINE_SOURCES})
+#add_library(${LIB} ${TRENDLINE_SOURCES})
 add_executable(${APP} ${TL_SOURCES})
 
 add_compile_options(-Wall -Wextra)
@@ -43,5 +44,5 @@ set(CMAKE_CXX_FLAGS "-Wall")
 
 target_link_libraries(${APP} "-pthread")
 
-install(TARGETS ${LIB} DESTINATION lib)
+#install(TARGETS ${LIB} DESTINATION lib)
 install(TARGETS ${APP} DESTINATION bin)
