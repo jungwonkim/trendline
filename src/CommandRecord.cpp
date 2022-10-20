@@ -76,7 +76,7 @@ int CommandRecord::Run() {
 }
 
 int* CommandRecord::GetEvents(int i) {
-  return pmu_->Events(i + group_);
+  return pmu_->Events((i + group_) % pmu_->ngroups());
 }
 
 int CommandRecord::InitOptions() {
