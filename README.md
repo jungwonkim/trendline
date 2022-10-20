@@ -2,7 +2,7 @@
 Yet Another Microarchitecture Profiler
 
 ## Support CPUs
-ARM Neoverse V1, Intel Ice Lake Xeon
+ARM Neoverse N1, ARM Neoverse V1, Intel Ice Lake Xeon
 
 ## Requirements
 
