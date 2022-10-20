@@ -5,8 +5,7 @@ Yet Another Microarchitecture Profiler
 ARM Neoverse N1, ARM Neoverse V1, Intel Ice Lake Xeon
 
 ## Requirements
-
-- CMake (>=2.8)
+CMake (>=2.8)
  
 ## Installation
 
