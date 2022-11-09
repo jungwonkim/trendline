@@ -40,8 +40,9 @@ PMU* PMU::GetPMU() {
   size_t size = 0ULL;
   while (getdelim(&line, &size, 0, fp) != -1) {
     if (strstr(line, "Intel")) { pmu = GetICX(); break; }
-    if (strstr(line, "0xd0c")) { pmu = GetNeoverseN1(); break; }
-    if (strstr(line, "0xd40")) { pmu = GetNeoverseV1(); break; }
+    if (strstr(line, "0xd0c")) { pmu = GetNeoverseN1(); break; } // ARM_NEOVERSE_N1
+    if (strstr(line, "0xd40")) { pmu = GetNeoverseV1(); break; } // ARM_NEOVERSE_V1
+    if (strstr(line, "0xd42")) { pmu = GetNeoverseV1(); break; } // ARM_CORTEX_A78AE
   }
   free(line);
   fclose(fp);

@@ -26,10 +26,11 @@ int Platform::Init(int* argc, char*** argv) {
   argc_ = *argc;
   argv_ = *argv;
 
-  if (argc_ < 2) return TRENDLINE_ERR;
-
   pmu_ = PMU::GetPMU();
-  if (!pmu_) return TRENDLINE_ERR;
+  if (!pmu_) {
+    _error("%s", "unsupported CPU");
+    return TRENDLINE_ERR;
+  }
 
   cmd_ = Command::CreateCommand(argv_[1], *argc, *argv);
   if (cmd_) return cmd_->Init();

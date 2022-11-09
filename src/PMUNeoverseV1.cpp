@@ -5,6 +5,7 @@
 
 #define NCOUNTERS           6
 
+#define SW_INCR             0x00
 #define L1I_CACHE_REFILL    0x01
 #define L1I_TLB_REFILL      0x02
 #define L1D_CACHE_REFILL    0x03
@@ -75,6 +76,7 @@ PMUNeoverseV1::~PMUNeoverseV1() {
 }
 
 int PMUNeoverseV1::InitS2E() {
+  S2E(SW_INCR);
   S2E(L1I_CACHE_REFILL);
   S2E(L1I_TLB_REFILL);
   S2E(L1D_CACHE_REFILL);
