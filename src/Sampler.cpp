@@ -51,7 +51,7 @@ int Sampler::Init() {
     int lead = i == 0 ? -1 : fd_[0];
     fd_[i] = syscall(__NR_perf_event_open, attr_ + i, 0, cpu_, lead, 0); 
     if (fd_[i] == -1) {
-      perror("syscall");
+      perror("perf_event_open");
       _error("event[%d] config[0x%llx]", i, attr_[i].config);
     }
     ioctl(fd_[i], PERF_EVENT_IOC_ID, id_ + i);

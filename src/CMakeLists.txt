@@ -1,14 +1,15 @@
-option(BUILD_SHARED_LIBS "Build shared libs" ON)
+option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
 set(LIB trendline)
 set(APP tl)
 
 set(TRENDLINE_SOURCES
+  CAPI.cpp
   Command.cpp
   CommandAggregate.cpp
+  CommandCorrel.cpp
   CommandHelp.cpp
   CommandList.cpp
-  CommandCorrel.cpp
   CommandStat.cpp
   CommandRecord.cpp
   Data.cpp
@@ -36,15 +37,18 @@ else()
   message(FATAL_ERROR "NOT SUPPORT ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 configure_file(Config.h.in Config.h)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_BINARY_DIR}/src)
 
-#add_library(${LIB} ${TRENDLINE_SOURCES})
-add_executable(${APP} ${TL_SOURCES})
+add_library(${LIB} ${TRENDLINE_SOURCES})
+#add_executable(${APP} ${TL_SOURCES})
+add_executable(${APP} Main.cpp)
+target_link_libraries(${APP} ${LIB})
 
 add_compile_options(-Wall -Wextra)
 set(CMAKE_CXX_FLAGS "-Wall")
 
-target_link_libraries(${APP} "-pthread")
+target_link_libraries(${APP} pthread)
 
-#install(TARGETS ${LIB} DESTINATION lib)
+install(TARGETS ${LIB} DESTINATION lib)
 install(TARGETS ${APP} DESTINATION bin)
