@@ -8,6 +8,9 @@ public:
   Timer();
   ~Timer();
 
+  double boot() { return boot_; }
+
+  void Reset();
   double Now();
 
 private:

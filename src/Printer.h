@@ -15,6 +15,7 @@ public:
   ~Printer();
 
   int Print(FILE* fp, Sampler* sampler);
+  int PrintBootTime(FILE* fp);
 
 private:
   PMU* pmu_;

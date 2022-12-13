@@ -4,7 +4,10 @@
 #include "Data.h"
 #include "Platform.h"
 #include "PMU.h"
+#include "Timer.h"
+#include <time.h>
 #include <unistd.h>
+#include <ctime>
 
 namespace trendline {
 
@@ -39,6 +42,15 @@ int Printer::Print(FILE* fp, Sampler* sampler) {
 
   return TRENDLINE_OK;
 }
+
+int Printer::PrintBootTime(FILE* fp) {
+  double boot = Platform::GetPlatform()->timer()->boot();
+  time_t secs = (time_t) boot;
+  fprintf(fp, "Boot time: %.9lf, %s", Platform::GetPlatform()->timer()->boot(), std::asctime(std::localtime(&secs)));
+  fflush(fp);
+  return TRENDLINE_OK;
+}
+
 
 } /* namespace trendline */
 

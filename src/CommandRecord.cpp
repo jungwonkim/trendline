@@ -70,6 +70,7 @@ int CommandRecord::Run() {
   for (int i = 0; i < nsamplers_; i++) samplers_[i]->Join();
 
   InitPrinterOutput();
+  printer_->PrintBootTime(fp_);
   for (int i = 0; i < nsamplers_; i++)
     if (WEXITSTATUS(status) == EXIT_SUCCESS) printer_->Print(fp_, samplers_[i]);
   return TRENDLINE_OK;

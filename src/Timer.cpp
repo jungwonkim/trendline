@@ -4,12 +4,16 @@
 namespace trendline {
 
 Timer::Timer() {
-  boot_ = 0.0;
-  boot_ = Now();
+  Reset();
 }
 
 Timer::~Timer() {
 
+}
+
+void Timer::Reset() {
+  boot_ = 0.0;
+  boot_ = Now();
 }
 
 double Timer::Now() {
