@@ -1,7 +1,7 @@
 #include "PMUICX.h"
 #include "Debug.h"
 
-// https://perfmon-events.intel.com/icelake.html
+// https://perfmon-events.intel.com/icelake_server.html
 
 #define NCOUNTERS                     8
 
