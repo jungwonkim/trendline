@@ -43,6 +43,7 @@ PMU* PMU::GetPMU() {
     if (strstr(line, "0xd0c")) { pmu = GetNeoverseN1(); break; } // ARM_NEOVERSE_N1
     if (strstr(line, "0xd40")) { pmu = GetNeoverseV1(); break; } // ARM_NEOVERSE_V1
     if (strstr(line, "0xd42")) { pmu = GetNeoverseV1(); break; } // ARM_CORTEX_A78AE
+    if (strstr(line, "0xd4f")) { pmu = GetNeoverseV1(); break; } // ARM_DEMETER
   }
   free(line);
   fclose(fp);
