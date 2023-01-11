@@ -2,7 +2,7 @@
 Yet Another Microarchitecture Profiler
 
 ## Support CPUs
-ARM Neoverse N1, ARM Neoverse V1, Intel Ice Lake Xeon
+ARM Neoverse N1/V1/V2, ARM Cortex A78AE, Intel Ice Lake Xeon
 
 ## Requirements
 CMake (>=2.8)
